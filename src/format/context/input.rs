@@ -117,6 +117,15 @@ impl Input {
         }
     }
 
+    pub fn seek_frame(&mut self, stream: i32, ts: i64, flags: i32) -> Result<(), Error> {
+        unsafe {
+            match av_seek_frame(self.as_mut_ptr(), stream, ts, flags) {
+                0 => Ok(()),
+                e => Err(Error::from(e)),
+            }
+        }
+    }
+
     pub fn seek<R: Range<i64>>(&mut self, ts: i64, range: R) -> Result<(), Error> {
         unsafe {
             match avformat_seek_file(
